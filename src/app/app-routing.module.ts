@@ -38,6 +38,7 @@ const routes: Routes = [
   { path: APP_ROUTES.scroll4, component: Scroll4Component },
   { path: '**', component: HomeRemadeComponent },
 ];
+//jjj
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
