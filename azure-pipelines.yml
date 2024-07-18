@@ -9,19 +9,29 @@ trigger:
 pool:
   name: Default
 
+variables:
+  frontendImageNameTag: 'palestiaFrontend'
+  dockerHubRepository: 'hadil0505/haki_app'
+
 steps:
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'  # Update to a version that meets Angular CLI requirements
-  displayName: 'Install Node.js'
+  - task: Docker@2
+    displayName: 'Build Frontend Docker Image'
+    inputs:
+      containerRegistry: 'dockerHub_connection'
+      repository: '$(dockerHubRepository)'
+      Dockerfile: 'Dockerfile'
+      command: 'build'
+      tags: |
+        $(Build.BuildId)
+        $(frontendImageNameTag)
 
-- script: |
-    npm install -g @angular/cli
-  displayName: 'Install Angular CLI'
-
-- script: |
-    npm install --force
-    ng --version  # Verify Angular CLI version
-    ng build
-  displayName: 'Build Angular Application'
+  - task: Docker@2
+    displayName: 'Push Frontend Docker Image to Docker Hub'
+    inputs:
+      containerRegistry: 'dockerHub_connection'
+      repository: '$(dockerHubRepository)'
+      command: 'push'
+      tags: |
+        $(Build.BuildId)
+        $(frontendImageNameTag)
