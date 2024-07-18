@@ -10,6 +10,11 @@ pool:
   name: Default
 
 steps:
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y git
+  displayName: 'Install Git'
+
 - task: NodeTool@0
   inputs:
     versionSpec: '14.x'
@@ -18,5 +23,5 @@ steps:
 - script: |
     npm install -g @angular/cli
     npm install --force
-    ng build
+    ng build --prod
   displayName: 'Build Angular Application'
