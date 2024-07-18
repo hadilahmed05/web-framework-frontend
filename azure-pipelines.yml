@@ -22,7 +22,7 @@ steps:
 
 
   - script: |
-      npm cache clean --force
+      npm rm -rdf node_module
       npm install --force
       npm update 
  
