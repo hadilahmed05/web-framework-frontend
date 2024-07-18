@@ -14,22 +14,18 @@ variables:
   dockerHubRepository: 'hadil0505/haki_app'
 
 steps:
+
+  - script: |
+      npm cache clean --force
+      npm install
+    displayName: 'Clean npm Cache and Reinstall Dependencies'
+
   - task: Docker@2
     displayName: 'Build Frontend Docker Image'
     inputs:
-      containerRegistry: 'dockerHub_connection'  # Replace with your Docker Hub service connection
+      containerRegistry: 'dockerHub_connection'
       repository: '$(dockerHubRepository)'
       Dockerfile: '**/Dockerfile'  # Path to your Dockerfile
-      tags: |
-        $(Build.BuildId)
-        $(frontendImageNameTag)
-
-  - task: Docker@2
-    displayName: 'Push Frontend Docker Image to Docker Hub'
-    inputs:
-      containerRegistry: 'dockerHub_connection'  # Replace with your Docker Hub service connection
-      repository: '$(dockerHubRepository)'
-      command: 'push'
       tags: |
         $(Build.BuildId)
         $(frontendImageNameTag)
