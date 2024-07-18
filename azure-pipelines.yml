@@ -15,17 +15,8 @@ steps:
     sudo apt-get install -y git
   displayName: 'Install Git'
 
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
 - checkout: self
-  persistCredentials: true
-  clean: true
-
-- task: NodeTool@0
-  inputs:
-    versionSpec: '14.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install -g @angular/cli
-    npm install --force
-    ng build --prod
-  displayName: 'Build Angular Application'
+  fetchDepth: 0
