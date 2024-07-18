@@ -30,5 +30,5 @@ steps:
 - script: |
     npm install -g @angular/cli
     npm install --force
-    ng build --prod
+    ng build
   displayName: 'Build Angular Application'
