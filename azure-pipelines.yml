@@ -14,14 +14,12 @@ variables:
   dockerHubRepository: 'hadil0505/haki_app'
 
 steps:
-
   - task: Docker@2
     displayName: 'Build Frontend Docker Image'
     inputs:
-      containerRegistry: 'dockerHub_connection'
+      containerRegistry: 'dockerHub_connection'  # Replace with your Docker Hub service connection
       repository: '$(dockerHubRepository)'
-      Dockerfile: 'Dockerfile'
-      command: 'build'
+      Dockerfile: '**/Dockerfile'  # Path to your Dockerfile
       tags: |
         $(Build.BuildId)
         $(frontendImageNameTag)
@@ -29,7 +27,7 @@ steps:
   - task: Docker@2
     displayName: 'Push Frontend Docker Image to Docker Hub'
     inputs:
-      containerRegistry: 'dockerHub_connection'
+      containerRegistry: 'dockerHub_connection'  # Replace with your Docker Hub service connection
       repository: '$(dockerHubRepository)'
       command: 'push'
       tags: |
