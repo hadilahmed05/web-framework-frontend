@@ -25,7 +25,7 @@ steps:
       npm cache clean --force
       npm install --force
       npm update 
-      ng serve 
+ 
     displayName: 'Clean npm Cache and Reinstall Dependencies'
 
   - task: Docker@2
