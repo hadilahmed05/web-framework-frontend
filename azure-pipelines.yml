@@ -11,9 +11,17 @@ pool:
 
 steps:
 
+- task: NodeTool@0
+  inputs:
+    versionSpec: '14.x'
+  displayName: 'Install Node.js'
+
 - script: |
     npm install -g @angular/cli
+  displayName: 'Install Angular CLI'
+
+- script: |
     npm install
     ng --version  # Verify Angular CLI version
-    ng build 
+    ng build
   displayName: 'Build Angular Application'
