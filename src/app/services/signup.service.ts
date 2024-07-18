@@ -12,11 +12,11 @@ export class SignupService {
 
   signupClient(credentials: any): Observable<any>{
     console.log(credentials)
-    return this.http.post(environment.DOMAIN + '/client-auth/signup' , credentials ,{withCredentials: true})
+    return this.http.post( 'http://172.213.195.67:3000'+ '/client-auth/signup' , credentials ,{withCredentials: true})
   }
 
   signupLawyer(credentials: any): Observable<any>{
-    return this.http.post(environment.DOMAIN + '/lawyer-auth/signup' , credentials ,{withCredentials: true})
+    return this.http.post('http://172.213.195.67:3000' + '/lawyer-auth/signup' , credentials ,{withCredentials: true})
   }
 
 }

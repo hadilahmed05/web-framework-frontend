@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  DOMAIN: "http://localhost:3000"
+  DOMAIN: "172.213.195.67:3000"
   
 };
 

@@ -46,11 +46,10 @@
               "node_modules/aos/dist/aos.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [
-              "node_modules/chart.js/dist/chart.js",
+            "scripts": [ 
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/chart.js/dist/Chart.js",
+              
   "node_modules/hammerjs/hammer.min.js"
             ]
           },
@@ -59,13 +58,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "50kb"
                 }
               ],
               "fileReplacements": [

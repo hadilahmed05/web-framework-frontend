@@ -14,16 +14,13 @@ RUN npm install
 COPY . .
 
 # Build the Angular application
-RUN npm run build --prod
+RUN npm run build
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine
 
 # Copy the built application from the previous stage
-COPY --from=build /app/dist/7A9I-FRONT /usr/share/nginx/html
+COPY --from=build /app/dist/haki-front /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
-
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
