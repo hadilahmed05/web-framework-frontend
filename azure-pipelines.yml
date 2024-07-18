@@ -10,25 +10,10 @@ pool:
   name: Default
 
 steps:
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y git
-  displayName: 'Install Git'
-
-- script: |
-    sudo rm -rf $(Build.SourcesDirectory)/*
-  displayName: 'Clean Source Directory'
-
-- checkout: self
-  clean: true
-
-- task: NodeTool@0
-  inputs:
-    versionSpec: '14.x'
-  displayName: 'Install Node.js'
 
 - script: |
     npm install -g @angular/cli
-    npm install --force
-    ng build
+    npm install
+    ng --version  # Verify Angular CLI version
+    ng build 
   displayName: 'Build Angular Application'
