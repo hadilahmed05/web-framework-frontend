@@ -15,6 +15,9 @@ steps:
     sudo apt-get install -y git
   displayName: 'Install Git'
 
+- checkout: self
+  fetchDepth: 0
+
 - task: NodeTool@0
   inputs:
     versionSpec: '14.x'
