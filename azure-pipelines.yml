@@ -21,7 +21,7 @@ steps:
   displayName: 'Install Angular CLI'
 
 - script: |
-    npm install
+    npm install --force
     ng --version  # Verify Angular CLI version
     ng build
   displayName: 'Build Angular Application'
