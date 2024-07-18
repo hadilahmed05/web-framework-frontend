@@ -16,7 +16,8 @@ steps:
   displayName: 'Install Git'
 
 - checkout: self
-  fetchDepth: 0
+  persistCredentials: true
+  clean: true
 
 - task: NodeTool@0
   inputs:
