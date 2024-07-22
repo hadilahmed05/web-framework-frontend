@@ -7,9 +7,9 @@ import { environment } from 'src/environments/environment';
 import { Case } from '../Model/case.model';
 
 
-const CASE_DEMAND = "http://172.213.195.67:3000/appointment/demand/";
-const CASE_PROGRESS = "http://172.213.195.67:3000/appointment/progress/";
-const CASE_FINISH = "http://172.213.195.67:3000/appointment/complete/"
+const CASE_DEMAND = "http://172.213.179.219:3000/appointment/demand/";
+const CASE_PROGRESS = "http://172.213.179.219/appointment/progress/";
+const CASE_FINISH = "http://172.213.179.219:3000/appointment/complete/"
 
 export type LawyerSubject = {
   event: "search" | "status";
@@ -66,27 +66,27 @@ export class LawyerCasesService {
   // }
 
   loadCasesDemand(email: string) : Observable<Case[]> {
-    return this.http.get<Case[]>('http://172.213.195.67:3000' + '/appointment/demand/' + email)
+    return this.http.get<Case[]>('http://172.213.179.219:3000' + '/appointment/demand/' + email)
    
   }
 
   loadCasesProgress(email: string) : Observable<Case[]> {
-    return this.http.get<Case[]>('http://172.213.195.67:3000' + '/appointment/progress/' + email)
+    return this.http.get<Case[]>('http://172.213.179.219:3000' + '/appointment/progress/' + email)
    
   }
 
   loadCasesFinish(email: string) : Observable<Case[]> {
-    return this.http.get<Case[]>('http://172.213.195.67:3000' + '/appointment/complete/' + email)
+    return this.http.get<Case[]>('http://172.213.179.219:3000' + '/appointment/complete/' + email)
    
   }
   
   loadCasesProgressClient(email: string) : Observable<Case[]> {
-    return this.http.get<Case[]>('http://172.213.195.67:3000' + '/appointment/progressClient/' + email)
+    return this.http.get<Case[]>('http://172.213.179.219:3000' + '/appointment/progressClient/' + email)
    
   }
 
   loadCasesFinishClient(email: string) : Observable<Case[]> {
-    return this.http.get<Case[]>('http://172.213.195.67:3000' + '/appointment/completeClient/' + email)
+    return this.http.get<Case[]>('http://172.213.179.219:3000' + '/appointment/completeClient/' + email)
    
   }
 

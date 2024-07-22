@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haki-frontend  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: haki-frontend 
+  template:
+    metadata:
+      labels:
+        app: haki-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: hadil0505/haki_app:front_final
+          ports:
+            - containerPort: 80

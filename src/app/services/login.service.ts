@@ -15,11 +15,11 @@ export class LoginService {
   constructor(private http: HttpClient, private toastr: ToastrService, private router:Router) { }
 
   loginLawyer(credentials: any) : Observable<any>{
-    return this.http.post('http://172.213.195.67:3000' + '/lawyer-auth/signin' , credentials ,{withCredentials: true})
+    return this.http.post('http://172.213.179.219:3000' + '/lawyer-auth/signin' , credentials ,{withCredentials: true})
   }
 
   loginClient(credentials: any) : Observable<any>{
-    return  this.http.post('http://172.213.195.67:3000' + '/client-auth/signin' , credentials ,{withCredentials: true})
+    return  this.http.post('http://172.213.179.219:3000' + '/client-auth/signin' , credentials ,{withCredentials: true})
   }
 
   verification(){
@@ -61,13 +61,13 @@ export class LoginService {
       throw new Error('No token found in localStorage');
     }
     const headers = new HttpHeaders().set('Authorization', `Bearer ${jwt}`);
-    return this.http.get<Lawyer>('http://172.213.195.67:3000' + '/lawyer/lawyerInfo/', { headers })
+    return this.http.get<Lawyer>('http://172.213.179.219:3000' + '/lawyer/lawyerInfo/', { headers })
   }
 
   getClient() : Observable<Client> {
     const jwt=localStorage.getItem("token");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${jwt}`);
-    return this.http.get<Client>('http://172.213.195.67:3000' + '/client/clientInfo/', { headers })
+    return this.http.get<Client>('http://172.213.179.219:3000' + '/client/clientInfo/', { headers })
   }
 
 
