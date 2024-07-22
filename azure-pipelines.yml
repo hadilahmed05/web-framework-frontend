@@ -30,6 +30,7 @@ steps:
  
     displayName: 'Clean npm Cache and Reinstall Dependencies'
 
+
   - task: Docker@2
     displayName: 'Build Frontend Docker Image'
     inputs:
@@ -39,4 +40,13 @@ steps:
       tags: |
         $(Build.BuildId)
         $(frontendImageNameTag)
-      
+  
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes_connection'
+      command: 'apply'
+      useConfigurationFile: true
+      configuration: 'frontend_manifests/frontend_deployment.yaml'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
