@@ -18,6 +18,7 @@ jobs:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
+      project: 'hakiFrontend_pipeline'
       pipeline: 'hakiFrontend_pipeline'  # Your pipeline ID or name
       runVersion: 'specific'
       runId: '68'  # Specific build ID
