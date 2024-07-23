@@ -14,7 +14,7 @@ pool:
 steps:
 - script: |
     echo "Starting OWASP ZAP Docker container..."
-    docker run -u zap -d --name zap -p 8080:8080 -p 8090:8090 -p 8091:8091 owasp/zap2docker-stable zap.sh -daemon -port 8080 -host 0.0.0.0 -config api.disablekey=true
+    docker run -u zap -d --name zap -p 8080:8080 -p 8090:8090 -p 8091:8091 owasp/zap2docker-weekly zap.sh -daemon -port 8080 -host 0.0.0.0 -config api.disablekey=true
     
     # Wait for ZAP to start
     echo "Waiting for OWASP ZAP to start..."
