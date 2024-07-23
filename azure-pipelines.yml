@@ -26,7 +26,7 @@ steps:
     
     # Run ZAP scan
     echo "Starting OWASP ZAP scan..."
-    docker exec zap zap-cli quick-scan --self-contained http://your-service-external-ip:port
+    docker exec zap zap-cli quick-scan --self-contained http://http://172.213.180.82:80
     
     # Copy the report out of the Docker container
     echo "Copying report from Docker container..."
