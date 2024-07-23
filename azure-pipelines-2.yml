@@ -18,11 +18,11 @@ jobs:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
-      project: 'hakiFrontend_pipeline'
-      pipeline: 'hakiFrontend_pipeline'  # Your pipeline ID or name
+      project: 'your-project-name'  # Replace with your Azure DevOps project name
+      pipeline: '42'  # Replace with your pipeline ID
       runVersion: 'specific'
-      runId: '68'  # Specific build ID
-      artifact: 'OWASPToNUnit3Artifact'  # Name of the artifact
+      runId: '68'  # Replace with the specific build ID
+      artifact: 'OWASPToNUnit3Artifact'  # Replace with your artifact name
       downloadPath: '$(Pipeline.Workspace)'
 
   - script: |
