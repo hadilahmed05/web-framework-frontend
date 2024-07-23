@@ -10,32 +10,19 @@ trigger:
 pool:
   name: Default
 
-variables:
-  frontendImageNameTag: 'palestiaFrontend'
-  dockerHubRepository: 'hadil0505/haki_app'
 
-steps:
-
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '18.x'
-    displayName: 'Install Node.js'
-
-
+jobs:
+- job: Build
+  displayName: 'Build Job'
+  pool:
+    name: Default
+  steps:
   - script: |
-      sudo npm cache clear --force
-      npm rm -rdf node_module
-      sudo rm -rf package-lock.json
-      npm install --force
- 
-    displayName: 'Clean npm Cache and Reinstall Dependencies'
-
-  - task: Docker@2
-    displayName: 'Build Frontend Docker Image'
+      echo "This step will verify the presence of the file."
+      ls -la $(Build.SourcesDirectory)/security
+    displayName: 'Verify OWASPToNUnit3.xslt file'
+  
+  - task: PublishBuildArtifacts@1
     inputs:
-      containerRegistry: 'dockerHub_connection'
-      repository: '$(dockerHubRepository)'
-      Dockerfile: '**/Dockerfile'  # Path to your Dockerfile
-      tags: |
-        $(Build.BuildId)
-        $(frontendImageNameTag)
+      pathtoPublish: '$(Build.SourcesDirectory)/security/OWASPToNUnit3.xslt'
+      artifactName: 'OWASPToNUnit3Artifact'
