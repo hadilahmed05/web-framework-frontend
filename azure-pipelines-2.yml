@@ -18,7 +18,6 @@ jobs:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
-      project: 'hadilahmed7240120'  # Your Azure DevOps organization/project name
       pipeline: 'hakiFrontend_pipeline'  # Your pipeline ID or name
       runVersion: 'specific'
       runId: '68'  # Specific build ID
