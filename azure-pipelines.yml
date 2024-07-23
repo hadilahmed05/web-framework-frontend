@@ -23,16 +23,8 @@ stages:
         sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://172.213.180.82:80 -x OWASP-ZAP-Report.xml -r testreport.html
       displayName: 'Run OWASP ZAP Scan'
     
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          $XslPath = "$($Env:SYSTEM_DEFAULTWORKINGDIRECTORY)/_OWASP-Test/OWASPToNUnit3Artifact/OWASPToNUnit3.xslt"
-          $XmlInputPath = "$($Env:SYSTEM_DEFAULTWORKINGDIRECTORY)/OWASP-ZAP-Report.xml"
-          $XmlOutputPath = "$($Env:SYSTEM_DEFAULTWORKINGDIRECTORY)/Converted-OWASP-ZAP-Report.xml"
-          $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
-          $XslTransform.Load($XslPath)
-          $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
+    - script: |
+        xsltproc -o Converted-OWASP-ZAP-Report.xml $SYSTEM_DEFAULTWORKINGDIRECTORY/_OWASP-Test/OWASPToNUnit3Artifact/OWASPToNUnit3.xslt OWASP-ZAP-Report.xml
       displayName: 'Convert OWASP ZAP Report'
     
     - task: PublishTestResults@2
