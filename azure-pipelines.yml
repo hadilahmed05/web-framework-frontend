@@ -11,34 +11,49 @@ pool:
   name: Default
 
 
-
 steps:
 - script: |
     # Install necessary packages or dependencies if required
     sudo apt update && sudo apt install -y openjdk-11-jdk
     
     # Start OWASP ZAP in daemon mode
+    echo "Starting OWASP ZAP in daemon mode..."
     zaproxy -daemon -port 8080
     
     # Wait for ZAP to start
     echo "Waiting for OWASP ZAP to start..."
-    sleep 30  # Increase this if needed
+    sleep 60  # Increase this if needed
     
     # Check if ZAP is running
+    echo "Checking if OWASP ZAP is running..."
     ps -ef | grep zaproxy
     
     # Run ZAP scan
-    zaproxy -cmd -quickurl http://172.213.180.82/:80 -quickout $(Build.ArtifactStagingDirectory)/zap_report.html
+    echo "Starting OWASP ZAP scan..."
+    zaproxy -cmd -quickurl http://your-service-external-ip:port -quickout $(Build.ArtifactStagingDirectory)/zap_report.html
+    echo "Scan started, waiting for completion..."
     
-    # Verify if the report is generated
+    # Wait for the scan to complete and the report to be generated
+    TIMEOUT=1800  # Total wait time in seconds (30 minutes)
+    INTERVAL=60   # Interval time in seconds to check for the report
+    TIME_ELAPSED=0
+
+    while [ ! -f "$(Build.ArtifactStagingDirectory)/zap_report.html" ] && [ $TIME_ELAPSED -lt $TIMEOUT ]; do
+        sleep $INTERVAL
+        TIME_ELAPSED=$((TIME_ELAPSED + INTERVAL))
+        echo "Waited $TIME_ELAPSED seconds, checking again..."
+    done
+
+    # Check if the report is generated
     if [ -f "$(Build.ArtifactStagingDirectory)/zap_report.html" ]; then
         echo "Report generated successfully."
     else
-        echo "Report not generated."
+        echo "Report not generated within the timeout period."
         exit 1
     fi
     
     # Stop OWASP ZAP
+    echo "Stopping OWASP ZAP..."
     zaproxy -cmd -shutdown
   displayName: 'Run OWASP ZAP Scan'
 
