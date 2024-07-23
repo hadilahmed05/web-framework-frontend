@@ -1,0 +1,37 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+
+pool:
+  name: Default
+jobs:
+- job: SecurityTest
+  displayName: 'Security Test Job'
+  pool:
+    name: Default
+  steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'specific'
+      project: '20240723'  # Replace with your actual project name or ID
+      pipeline: '16'  # Replace with your actual build pipeline ID (numeric)
+      runVersion: 'latest'
+      artifact: 'OWASPToNUnit3Artifact'
+      downloadPath: '$(Pipeline.Workspace)'
+
+  - script: |
+      sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://your-service-url -x OWASP-ZAP-Report.xml -r testreport.html
+    displayName: 'Run OWASP ZAP Scan'
+
+  - script: |
+      xsltproc -o $(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml $(Pipeline.Workspace)/OWASPToNUnit3Artifact/OWASPToNUnit3.xslt $(Pipeline.Workspace)/OWASP-ZAP-Report.xml
+    displayName: 'Convert OWASP ZAP Report'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml'
+      artifactName: 'ConvertedZAPReport'
