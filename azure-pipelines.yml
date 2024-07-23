@@ -14,12 +14,36 @@ pool:
 
 steps:
 - script: |
-    # Run OWASP ZAP scan
-    zaproxy -cmd -quickurl http://http://172.213.180.82:80 -quickout zap_report.html
+    # Install necessary packages or dependencies if required
+    sudo apt update && sudo apt install -y openjdk-11-jdk
+    
+    # Start OWASP ZAP in daemon mode
+    zaproxy -daemon -port 8080
+    
+    # Wait for ZAP to start
+    echo "Waiting for OWASP ZAP to start..."
+    sleep 30  # Increase this if needed
+    
+    # Check if ZAP is running
+    ps -ef | grep zaproxy
+    
+    # Run ZAP scan
+    zaproxy -cmd -quickurl http://172.213.180.82/:80 -quickout $(Build.ArtifactStagingDirectory)/zap_report.html
+    
+    # Verify if the report is generated
+    if [ -f "$(Build.ArtifactStagingDirectory)/zap_report.html" ]; then
+        echo "Report generated successfully."
+    else
+        echo "Report not generated."
+        exit 1
+    fi
+    
+    # Stop OWASP ZAP
+    zaproxy -cmd -shutdown
   displayName: 'Run OWASP ZAP Scan'
 
 - task: PublishPipelineArtifact@1
   inputs:
     artifactName: 'zap-report'
-    targetPath: '$(Build.SourcesDirectory)/zap_report.html'
+    targetPath: '$(Build.ArtifactStagingDirectory)/zap_report.html'
   displayName: 'Publish OWASP ZAP Reports'
