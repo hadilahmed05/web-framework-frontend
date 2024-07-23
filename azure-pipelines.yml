@@ -23,8 +23,12 @@ stages:
         sudo docker run --rm -v $(pwd):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://172.213.180.82:80 -x OWASP-ZAP-Report.xml -r testreport.html
       displayName: 'Run OWASP ZAP Scan'
     
+    - download: current
+      artifact: OWASPToNUnit3Artifact
+      displayName: 'Download OWASPToNUnit3 Artifact'
+
     - script: |
-        xsltproc -o Converted-OWASP-ZAP-Report.xml $SYSTEM_DEFAULTWORKINGDIRECTORY/_OWASP-Test/OWASPToNUnit3Artifact/OWASPToNUnit3.xslt OWASP-ZAP-Report.xml
+        xsltproc -o Converted-OWASP-ZAP-Report.xml $(System.DefaultWorkingDirectory)/OWASPToNUnit3Artifact/security/OWASPToNUnit3.xslt OWASP-ZAP-Report.xml
       displayName: 'Convert OWASP ZAP Report'
     
     - task: PublishTestResults@2
