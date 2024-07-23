@@ -17,12 +17,7 @@ jobs:
   pool:
     name: Default
   steps:
-  - script: |
-      echo "This step will verify the presence of the file."
-      ls -la $(Build.SourcesDirectory)/security
-    displayName: 'Verify OWASPToNUnit3.xslt file'
-  
   - task: PublishBuildArtifacts@1
     inputs:
-      pathtoPublish: '$(Build.SourcesDirectory)/security/OWASPToNUnit3.xslt'
+      pathtoPublish: 'security/OWASPToNUnit3.xslt'
       artifactName: 'OWASPToNUnit3Artifact'
