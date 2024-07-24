@@ -3,48 +3,14 @@ trigger:
 
 pool:
   name: Default
+steps:
+- script: |
+    docker run -v $(Build.SourcesDirectory):/zap/wrk:rw --network="host" owasp/zap2docker-stable zap-baseline.py -t http://172.213.180.82:80 -r testreport.html
+  displayName: 'Run ZAP Baseline Scan'
 
-jobs:
-- job: SecurityScan
-  displayName: 'OWASP ZAP Security Scan Job'
-  pool:
-    name: Default
-  steps:
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      buildType: 'specific'
-      project: 'hakiFrontend_pipeline'
-      pipeline: 'hadilahmed05.web-framework-frontend'
-      runVersion: 'latest'
-      artifact: 'OWASPToNUnit3Artifact'
-      downloadPath: '$(Pipeline.Workspace)/OWASPToNUnit3Artifact'
-
-  - script: |
-      echo "Listing contents of $(Pipeline.Workspace)"
-      ls -R $(Pipeline.Workspace)
-    displayName: 'List Workspace Directory'
-
-  - script: |
-      echo "Listing contents of $(Pipeline.Workspace)/OWASPToNUnit3Artifact"
-      ls -R $(Pipeline.Workspace)/OWASPToNUnit3Artifact
-    displayName: 'List contents of OWASPToNUnit3Artifact'
-
-  - script: |
-      echo "Checking contents of OWASP-ZAP-Report.xml"
-      cat $(Pipeline.Workspace)/OWASP-ZAP-Report.xml
-    displayName: 'Display OWASP-ZAP Report'
-
-  - script: |
-      echo "Running OWASP ZAP Scan"
-      docker run --rm -v $(Pipeline.Workspace)/zap:/zap -t owasp/zap2docker-stable zap-baseline.py -t http://172.213.180.82:80 -r /zap/OWASP-ZAP-Report.html
-    displayName: 'Run OWASP ZAP Scan'
-    
-  - script: |
-      echo "Checking contents of OWASP-ZAP-Report.html"
-      cat $(Pipeline.Workspace)/zap/OWASP-ZAP-Report.html
-    displayName: 'Display OWASP ZAP HTML Report'
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(Pipeline.Workspace)/zap/OWASP-ZAP-Report.html'
-      artifactName: 'OWASPZAPReport'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/testreport.html'
+    artifact: 'ZAP Report'
+    publishLocation: 'pipeline'
+  displayName: 'Publish ZAP Report'
