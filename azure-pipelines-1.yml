@@ -17,7 +17,7 @@ jobs:
       pipeline: 'hadilahmed05.web-framework-frontend'
       runVersion: 'latest'
       artifact: 'OWASPToNUnit3Artifact'
-      downloadPath: '$(Pipeline.Workspace)/OWASPToNUnit3Artifact'  # Ensuring a specific path for download
+      downloadPath: '$(Pipeline.Workspace)/OWASPToNUnit3Artifact'
 
   - script: |
       echo "Listing contents of $(Pipeline.Workspace)"
@@ -30,12 +30,18 @@ jobs:
     displayName: 'List contents of OWASPToNUnit3Artifact'
 
   - script: |
-      sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://172.213.180.82:80 -x OWASP-ZAP-Report.xml -r testreport.html
-    displayName: 'Run OWASP ZAP Scan'
+      echo "Checking contents of OWASP-ZAP-Report.xml"
+      cat $(Pipeline.Workspace)/OWASP-ZAP-Report.xml
+    displayName: 'Display OWASP-ZAP Report'
 
   - script: |
       xsltproc -o $(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml $(Pipeline.Workspace)/OWASPToNUnit3Artifact/OWASPToNUnit3.xslt $(Pipeline.Workspace)/OWASP-ZAP-Report.xml
     displayName: 'Convert OWASP ZAP Report'
+
+  - script: |
+      echo "Checking contents of Converted-OWASP-ZAP-Report.xml"
+      cat $(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml
+    displayName: 'Display Converted OWASP ZAP Report'
 
   - task: PublishBuildArtifacts@1
     inputs:
