@@ -5,7 +5,7 @@ pool:
   name: Default
 steps:
 - script: |
-    docker run -v $(Build.SourcesDirectory):/zap/wrk:rw --network="host" owasp/zap2docker-stable zap-baseline.py -t http://172.213.180.82:80 -r testreport.html
+    docker run -v $(Build.SourcesDirectory):/zap/wrk:rw --network="host" zaproxy/zap-stable zap-baseline.py -t http://172.213.180.82:80 -r testreport.html
   displayName: 'Run ZAP Baseline Scan'
 
 - task: PublishPipelineArtifact@1
