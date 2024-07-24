@@ -1,12 +1,9 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - main
 
 pool:
   name: Default
+
 jobs:
 - job: SecurityTest
   displayName: 'Security Test Job'
@@ -16,26 +13,19 @@ jobs:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
-      project: 'hakiFrontend_pipeline'  # Replace with your actual project name or ID
-      pipeline: 'hadilahmed05.web-framework-frontend'  # Replace with your actual build pipeline ID (numeric)
+      project: 'hakiFrontend_pipeline'
+      pipeline: 'hadilahmed05.web-framework-frontend'
       runVersion: 'latest'
       artifact: 'OWASPToNUnit3Artifact'
       downloadPath: '$(Pipeline.Workspace)'
- 
- # Add a step to list the contents of the downloaded artifacts directory
-  - script: |
-      echo "Listing contents of $(Pipeline.Workspace)/OWASPToNUnit3Artifact"
-      ls -R $(Pipeline.Workspace)/OWASPToNUnit3Artifact
-    displayName: 'List contents of OWASPToNUnit3Artifact'
 
-  # Add a step to list the contents of the workspace to check where files are located
   - script: |
-      echo "Listing contents of $(Pipeline.Workspace)"
+      echo "Listing contents of workspace"
       ls -R $(Pipeline.Workspace)
     displayName: 'List Workspace Directory'
 
   - script: |
-      sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://http://172.213.180.82:80 -x OWASP-ZAP-Report.xml -r testreport.html
+      sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://172.213.180.82:80 -x OWASP-ZAP-Report.xml -r testreport.html
     displayName: 'Run OWASP ZAP Scan'
 
   - script: |
