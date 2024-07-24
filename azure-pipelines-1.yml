@@ -3,14 +3,33 @@ trigger:
 
 pool:
   name: Default
+variables:
+  zapDir: '$(Build.SourcesDirectory)/zap'
+  reportHtml: '$(zapDir)/testreport.html'
+  reportXml: '$(zapDir)/testreport.xml'
+  reportJson: '$(zapDir)/testreport.json'
+  targetUrl: 'http://172.213.180.82:80'
+
 steps:
 - script: |
-    docker run -v $(Build.SourcesDirectory):/zap/wrk:rw --network="host" zaproxy/zap-stable zap-baseline.py -t http://172.213.180.82:80 -r testreport.html
+    echo "Creating zap directory"
+    mkdir -p $(zapDir)
+  displayName: 'Create ZAP Directory'
+
+- script: |
+    echo "Setting permissions for zap directory"
+    chmod -R 777 $(zapDir)
+  displayName: 'Set Permissions'
+
+- script: |
+    echo "Running ZAP Baseline Scan"
+    docker pull ghcr.io/zaproxy/zaproxy:stable
+    docker run --rm -v $(zapDir):/zap/wrk:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t $(targetUrl) -r /zap/wrk/testreport.html -x /zap/wrk/testreport.xml -J /zap/wrk/testreport.json -T 2
   displayName: 'Run ZAP Baseline Scan'
 
-- task: PublishPipelineArtifact@1
+- task: PublishBuildArtifacts@1
   inputs:
-    targetPath: '$(Build.SourcesDirectory)/testreport.html'
-    artifact: 'ZAP Report'
-    publishLocation: 'pipeline'
-  displayName: 'Publish ZAP Report'
+    PathtoPublish: '$(zapDir)'
+    ArtifactName: 'zap-reports'
+    publishLocation: 'Container'
+  displayName: 'Publish ZAP Reports'
