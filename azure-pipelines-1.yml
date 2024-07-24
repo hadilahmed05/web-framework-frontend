@@ -16,8 +16,8 @@ jobs:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
-      project: '20240723'  # Replace with your actual project name or ID
-      pipeline: '16'  # Replace with your actual build pipeline ID (numeric)
+      project: 'hadilahmed7240120'  # Replace with your actual project name or ID
+      pipeline: 'hakiFrontend_pipeline'  # Replace with your actual build pipeline ID (numeric)
       runVersion: 'latest'
       artifact: 'OWASPToNUnit3Artifact'
       downloadPath: '$(Pipeline.Workspace)'
