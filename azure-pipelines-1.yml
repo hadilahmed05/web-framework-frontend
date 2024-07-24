@@ -17,7 +17,7 @@ jobs:
     inputs:
       buildType: 'specific'
       project: 'hakiFrontend_pipeline'  # Replace with your actual project name or ID
-      pipeline: 'hadilahmed05.web-framework-frontende'  # Replace with your actual build pipeline ID (numeric)
+      pipeline: 'hadilahmed05.web-framework-frontend'  # Replace with your actual build pipeline ID (numeric)
       runVersion: 'latest'
       artifact: 'OWASPToNUnit3Artifact'
       downloadPath: '$(Pipeline.Workspace)'
