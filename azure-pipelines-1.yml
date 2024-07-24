@@ -13,21 +13,21 @@ jobs:
   - task: DownloadPipelineArtifact@2
     inputs:
       buildType: 'specific'
-      project: 'hakiFrontend_pipeline'  # Replace with your actual project name or ID
-      pipeline: 'hadilahmed05.web-framework-frontend'  # Replace with your actual build pipeline ID (numeric)
+      project: 'hakiFrontend_pipeline'
+      pipeline: 'hadilahmed05.web-framework-frontend'
       runVersion: 'latest'
       artifact: 'OWASPToNUnit3Artifact'
-      downloadPath: '$(Pipeline.Workspace)'  # This should be set to ensure correct download location
-
-  - script: |
-      echo "Listing contents of $(Pipeline.Workspace)/OWASPToNUnit3Artifact"
-      ls -R $(Pipeline.Workspace)/OWASPToNUnit3Artifact
-    displayName: 'List contents of OWASPToNUnit3Artifact'
+      downloadPath: '$(Pipeline.Workspace)/OWASPToNUnit3Artifact'  # Ensuring a specific path for download
 
   - script: |
       echo "Listing contents of $(Pipeline.Workspace)"
       ls -R $(Pipeline.Workspace)
     displayName: 'List Workspace Directory'
+
+  - script: |
+      echo "Listing contents of $(Pipeline.Workspace)/OWASPToNUnit3Artifact"
+      ls -R $(Pipeline.Workspace)/OWASPToNUnit3Artifact
+    displayName: 'List contents of OWASPToNUnit3Artifact'
 
   - script: |
       sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://your-service-url -x OWASP-ZAP-Report.xml -r testreport.html
