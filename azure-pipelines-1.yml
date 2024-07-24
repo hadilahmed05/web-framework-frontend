@@ -3,6 +3,7 @@ trigger:
 
 pool:
   name: Default
+
 variables:
   zapDir: '$(Build.SourcesDirectory)/zap'
   reportHtml: '$(zapDir)/testreport.html'
@@ -26,6 +27,11 @@ steps:
     docker pull ghcr.io/zaproxy/zaproxy:stable
     docker run --rm -v $(zapDir):/zap/wrk:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t $(targetUrl) -r /zap/wrk/testreport.html -x /zap/wrk/testreport.xml -J /zap/wrk/testreport.json -T 2
   displayName: 'Run ZAP Baseline Scan'
+
+- script: |
+    echo "Listing files in zap directory"
+    ls -l $(zapDir)
+  displayName: 'List Files in ZAP Directory'
 
 - task: PublishBuildArtifacts@1
   inputs:
