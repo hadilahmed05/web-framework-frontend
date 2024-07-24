@@ -5,8 +5,8 @@ pool:
   name: Default
 
 jobs:
-- job: SecurityTest
-  displayName: 'Security Test Job'
+- job: SecurityScan
+  displayName: 'OWASP ZAP Security Scan Job'
   pool:
     name: Default
   steps:
@@ -35,15 +35,16 @@ jobs:
     displayName: 'Display OWASP-ZAP Report'
 
   - script: |
-      xsltproc -o $(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml $(Pipeline.Workspace)/OWASPToNUnit3Artifact/OWASPToNUnit3.xslt $(Pipeline.Workspace)/OWASP-ZAP-Report.xml
-    displayName: 'Convert OWASP ZAP Report'
-
+      echo "Running OWASP ZAP Scan"
+      docker run --rm -v $(Pipeline.Workspace)/zap:/zap -t owasp/zap2docker-stable zap-baseline.py -t http://172.213.180.82:80 -r /zap/OWASP-ZAP-Report.html
+    displayName: 'Run OWASP ZAP Scan'
+    
   - script: |
-      echo "Checking contents of Converted-OWASP-ZAP-Report.xml"
-      cat $(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml
-    displayName: 'Display Converted OWASP ZAP Report'
+      echo "Checking contents of OWASP-ZAP-Report.html"
+      cat $(Pipeline.Workspace)/zap/OWASP-ZAP-Report.html
+    displayName: 'Display OWASP ZAP HTML Report'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathtoPublish: '$(Pipeline.Workspace)/Converted-OWASP-ZAP-Report.xml'
-      artifactName: 'ConvertedZAPReport'
+      pathtoPublish: '$(Pipeline.Workspace)/zap/OWASP-ZAP-Report.html'
+      artifactName: 'OWASPZAPReport'
