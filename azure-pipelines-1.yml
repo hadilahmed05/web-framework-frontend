@@ -30,7 +30,7 @@ jobs:
     displayName: 'List contents of OWASPToNUnit3Artifact'
 
   - script: |
-      sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://your-service-url -x OWASP-ZAP-Report.xml -r testreport.html
+      sudo docker run --rm -v $(Pipeline.Workspace):/zap/wrk/:rw -t ictu/zap2docker-weekly zap-baseline.py -I -j -t http://172.213.180.82:80 -x OWASP-ZAP-Report.xml -r testreport.html
     displayName: 'Run OWASP ZAP Scan'
 
   - script: |
