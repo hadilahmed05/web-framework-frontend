@@ -13,6 +13,11 @@ pool:
 steps:
 - checkout: self
   fetchDepth: 0
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'  # Use the appropriate Java version
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
 - task: SonarCloudPrepare@2
   inputs:
     SonarCloud: 'sonarCloud'
