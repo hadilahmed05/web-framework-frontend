@@ -29,8 +29,8 @@ steps:
   displayName: 'RUN AQUASEC TRIVY SCAN AND COPY TO ARTIFACTS STAGING DIRECTORY'
   inputs:
     script: |
-      trivy image --severity LOW,MEDIUM --format template --template "@.azuredevops/junit.tpl" -o junit-report-low-med.xml haki_app:haki_finalll        
-      trivy image --severity HIGH,CRITICAL --format template --template "@.azuredevops/junit.tpl" -o junit-report-high-crit.xml haki_app:haki_finalll
+      trivy image --severity LOW,MEDIUM --format template --template "@.azuredevops/junit.tpl" -o junit-report-low-med.xml hadil0505/haki_app:haki_finalll        
+      trivy image --severity HIGH,CRITICAL --format template --template "@.azuredevops/junit.tpl" -o junit-report-high-crit.xml hadil0505/haki_app:haki_finalll
 
 - task: PublishTestResults@2
   displayName: 'Publish Low and Medium Vulnerabilities'
