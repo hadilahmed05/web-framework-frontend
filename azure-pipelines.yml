@@ -28,3 +28,10 @@ steps:
       trivy image --format table \
                     --output trivy-image-report.html \
                     hadil0505/haki_app:haki_finalll 
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Trivy Report'
+  inputs:
+    targetPath: '$(Pipeline.Workspace)/trivy-image-report.html'
+    artifactName: 'trivy-reports'
+    publishLocation: 'pipeline'
