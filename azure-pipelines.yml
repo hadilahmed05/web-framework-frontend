@@ -8,6 +8,7 @@ trigger:
 
 pool:
   name: Default
+
 steps:
 - task: CmdLine@2
   displayName: 'Pull KubeLinter Docker Image'
@@ -20,7 +21,7 @@ steps:
   inputs:
     script: |
       mkdir -p kubelinter-reports
-      kube-linter lint frontend_manifests --format sarif --output kubelinter-reports/kubelinter-results.sarif
+      docker run --rm -v $(System.DefaultWorkingDirectory):/workdir stackrox/kube-linter:latest lint /workdir/frontend_manifests --format sarif --output /workdir/kubelinter-reports/kubelinter-results.sarif
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish KubeLinter Report'
