@@ -21,7 +21,7 @@ steps:
   inputs:
     script: |
       mkdir -p kubelinter-reports
-      docker run --rm -v $(System.DefaultWorkingDirectory):/workdir stackrox/kube-linter:latest lint /workdir/frontend_manifests --format sarif --output /workdir/kubelinter-reports/kubelinter-results.sarif
+      docker run --rm -v $(System.DefaultWorkingDirectory):/workdir stackrox/kube-linter:latest lint /workdir/frontend_manifests --format sarif > /workdir/kubelinter-reports/kubelinter-results.sarif
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish KubeLinter Report'
