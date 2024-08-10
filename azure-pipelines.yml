@@ -13,11 +13,13 @@ pool:
 steps:
 - checkout: self
   fetchDepth: 0
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '17'  # Use the appropriate Java version
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
+
+# Set JAVA_HOME to Java 17
+- script: |
+    echo "##vso[task.setvariable variable=JAVA_HOME]$(/usr/lib/jvm/java-17-openjdk-amd64)"
+    echo "##vso[task.setvariable variable=PATH]$JAVA_HOME/bin:$PATH"
+  displayName: 'Set JAVA_HOME to Java 17'
+
 - task: SonarCloudPrepare@2
   inputs:
     SonarCloud: 'sonarCloud'
@@ -27,6 +29,7 @@ steps:
     cliProjectKey: 'hadilahmed7240120_hakiFrontend_pipeline'
     cliProjectName: 'hakiFrontend_pipeline'
     cliSources: '.'
+
 - task: NodeTool@0
   inputs:
     versionSpec: '18.x'  # Update to a version that meets Angular CLI requirements
@@ -41,6 +44,7 @@ steps:
     ng --version  # Verify Angular CLI version
     ng build
   displayName: 'Build Angular Application'
+
 - task: SonarCloudAnalyze@2
   inputs:
     jdkversion: 'JAVA_HOME_17_X64'
