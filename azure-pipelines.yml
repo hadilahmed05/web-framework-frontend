@@ -8,30 +8,11 @@ trigger:
 
 pool:
   name: Default
-
 steps:
+- task: dependency-check-build-task@6
+  inputs:
+    projectName: 'hakiFrontend_pipeline'
+    scanPath: '.'
+    format: 'HTML'
+    uploadReports: true
 
-- task: CmdLine@2
-  displayName: 'DOWNLOAD AND INSTALL AQUASEC TRIVY'
-  inputs:
-    script: |
-      sudo apt-get install wget apt-transport-https gnupg lsb-release
-      wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-      echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-      sudo apt-get update
-      sudo apt-get install trivy
-      trivy -v
-      pwd
-- task: CmdLine@2
-  inputs:
-    script: |
-      trivy image --format table \
-                    --output trivy-image-report.html \
-                    hadil0505/haki_app:haki_finalll 
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Trivy Report'
-  inputs:
-    targetPath: '/home/hadil/Desktop/myagent/_work/1/s/trivy-image-report.html'
-    artifactName: 'trivy-reports'
-    publishLocation: 'pipeline'
