@@ -9,12 +9,11 @@ trigger:
 pool:
   name: Default
 steps:
-- task: Docker@2
+- task: CmdLine@2
   displayName: 'Pull KubeLinter Docker Image'
   inputs:
-    command: 'pull'
-    repository: 'stackrox/kube-linter'
-    tag: 'latest'
+    script: |
+      docker pull stackrox/kube-linter:latest
 
 - task: CmdLine@2
   displayName: 'Run KubeLinter Scan'
