@@ -26,7 +26,7 @@ steps:
   inputs:
     script: |
       mkdir -p kubelinter-reports
-      kube-linter lint ./frontend_manifests --format sarif --output kubelinter-reports/kubelinter-results.sarif
+      kube-linter lint ./frontend_manifests > kubelinter-reports/kubelinter-results.txt
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish KubeLinter Report'
