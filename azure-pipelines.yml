@@ -11,24 +11,43 @@ pool:
   name: Default
 
 steps:
-- checkout: self
-  fetchDepth: 0
-
-# Install Trivy
-- script: |
-    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-  displayName: 'Install Trivy'
 
 
-# Run Trivy to scan the Docker image
-- script: |
-    trivy image --format json --output trivy-scan-result.json hadil0505/haki_app:haki_finalll
-  displayName: 'Scan Docker Image with Trivy'
-
-# Publish the scan result as an artifact
-- task: PublishBuildArtifacts@1
+- task: CmdLine@2
+  displayName: 'DOWNLOAD AND INSTALL AQUASEC TRIVY'
   inputs:
-    PathtoPublish: 'trivy-scan-result.json'
-    ArtifactName: 'TrivyScanResult'
-    publishLocation: 'Container'
-  displayName: 'Publish Trivy Scan Result'
+    script: |
+      sudo apt-get install wget apt-transport-https gnupg lsb-release
+      wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+      echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+      sudo apt-get update
+      sudo apt-get install trivy
+      trivy -v
+      pwd
+
+- task: CmdLine@2
+  displayName: 'RUN AQUASEC TRIVY SCAN AND COPY TO ARTIFACTS STAGING DIRECTORY'
+  inputs:
+    script: |
+      trivy image --severity LOW,MEDIUM --format template --template "@.azuredevops/junit.tpl" -o junit-report-low-med.xml haki_app:haki_finalll        
+      trivy image --severity HIGH,CRITICAL --format template --template "@.azuredevops/junit.tpl" -o junit-report-high-crit.xml haki_app:haki_finalll
+
+- task: PublishTestResults@2
+  displayName: 'Publish Low and Medium Vulnerabilities'
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/junit-report-low-med.xml'
+    mergeTestResults: true
+    failTaskOnFailedTests: false
+    testRunTitle: 'Trivy - Low and Medium Vulnerabilities'
+  condition: 'always()'   
+
+- task: PublishTestResults@2
+  displayName: 'Publish High and Critical Vulnerabilities'
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/junit-report-high-crit.xml'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
+    testRunTitle: 'Trivy - High and Critical Vulnerabilities'
+  condition: 'always()'
