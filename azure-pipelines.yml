@@ -25,8 +25,7 @@ steps:
   displayName: 'Run KubeLinter Scan'
   inputs:
     script: |
-      mkdir -p kubelinter-reports
-      kube-linter lint ./k8s_manifests --format sarif > kubelinter-reports/kubelinter-results.sarif
+      kube-linter lint ./frontend_manifests
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish KubeLinter Report'
