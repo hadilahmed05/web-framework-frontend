@@ -9,24 +9,21 @@ trigger:
 pool:
   name: Default
 steps:
-- task: CmdLine@2
-  displayName: 'Install KubeLinter'
+- task: Docker@2
+  displayName: 'Pull KubeLinter Docker Image'
   inputs:
-    script: |
-      curl -LO https://github.com/stackrox/kube-linter/releases/download/v0.5.1/kube-linter-v0.5.1-linux.tar.gz
-      tar -xzf kube-linter-v0.5.1-linux.tar.gz
-      sudo mv kube-linter /usr/local/bin/
-      kube-linter version
+    command: 'pull'
+    repository: 'stackrox/kube-linter'
+    tag: 'latest'
 
 - task: CmdLine@2
   displayName: 'Run KubeLinter Scan'
   inputs:
     script: |
-      mkdir -p kubelinter-reports
-      kube-linter lint /path/to/your/k8s/manifests --format sarif --output kubelinter-reports/kubelinter-results.sarif
+      docker run --rm -v $(Build.SourcesDirectory):/data stackrox/kube-linter:latest lint /data/path/to/your/k8s/manifests --format sarif --output /data/kubelinter-reports/kubelinter-results.sarif
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish KubeLinter Report'
   inputs:
-    targetPath: 'kubelinter-reports'
+    targetPath: '$(Build.SourcesDirectory)/kubelinter-reports'
     artifactName: 'kubelinter-reports'
