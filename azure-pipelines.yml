@@ -23,28 +23,8 @@ steps:
       trivy -v
       pwd
 - task: CmdLine@2
-  displayName: 'DOWNLOAD JUNIT TEMPLATE'
   inputs:
-    script: |
-      mkdir -p .azuredevops
-      curl -o .azuredevops/junit.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/docs/junit.tpl
-- task: CmdLine@2
-  displayName: 'RUN AQUASEC TRIVY SCAN'
-  inputs:
-    script: |
-      trivy image --severity LOW,MEDIUM --format template --template "@.azuredevops/junit.tpl" -o junit-report-low-med.xml hadil0505/haki_app:haki_finalll        
-      trivy image --severity HIGH,CRITICAL --format template --template "@.azuredevops/junit.tpl" -o junit-report-high-crit.xml hadil0505/haki_app:haki_finalll
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Low and Medium Vulnerabilities Report'
-  inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifactName: 'trivy-reports'
-    publishLocation: 'pipeline'
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish High and Critical Vulnerabilities Report'
-  inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifactName: 'trivy-reports'
-    publishLocation: 'pipeline'
+      script: |
+        trivy image --format table \
+                    --output trivy-image-report.html \
+                    hadil0505/hadil0505/haki_app:haki_finalll 
