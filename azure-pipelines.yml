@@ -13,8 +13,8 @@ steps:
   displayName: 'Install KubeLinter'
   inputs:
     script: |
-      curl -s https://api.github.com/repos/stackrox/kube-linter/releases/latest | grep "browser_download_url.*linux_amd64.tar.gz" | cut -d : -f 2,3 | tr -d \" | wget -qi -
-      tar -xzf kube-linter-*.tar.gz
+      curl -LO https://github.com/stackrox/kube-linter/releases/download/v0.5.1/kube-linter-v0.5.1-linux.tar.gz
+      tar -xzf kube-linter-v0.5.1-linux.tar.gz
       sudo mv kube-linter /usr/local/bin/
       kube-linter version
 
@@ -23,7 +23,7 @@ steps:
   inputs:
     script: |
       mkdir -p kubelinter-reports
-      kube-linter lint frontend_manifests --format sarif --output kubelinter-reports/kubelinter-results.sarif
+      kube-linter lint /path/to/your/k8s/manifests --format sarif --output kubelinter-reports/kubelinter-results.sarif
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish KubeLinter Report'
