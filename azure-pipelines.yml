@@ -24,7 +24,7 @@ steps:
       pwd
 - task: CmdLine@2
   inputs:
-      script: |
-        trivy image --format table \
+    script: |
+      trivy image --format table \
                     --output trivy-image-report.html \
                     hadil0505/hadil0505/haki_app:haki_finalll 
