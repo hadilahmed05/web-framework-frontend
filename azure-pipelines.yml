@@ -10,14 +10,32 @@ trigger:
 pool:
   name: Default
 
+steps:
+- checkout: self
+  fetchDepth: 0
+- task: SonarCloudPrepare@2
+  inputs:
+    SonarCloud: 'sonarCloud'
+    organization: 'hadilahmed7240120'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'hadilahmed7240120_hakiFrontend_pipeline'
+    cliProjectName: 'hakiFrontend_pipeline'
+    cliSources: '.'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'  # Update to a version that meets Angular CLI requirements
+  displayName: 'Install Node.js'
 
-jobs:
-- job: Build
-  displayName: 'Build Job'
-  pool:
-    name: Default
-  steps:
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: 'security/OWASPToNUnit3.xslt'
-      artifactName: 'OWASPToNUnit3Artifact'
+- script: |
+    npm install -g @angular/cli
+  displayName: 'Install Angular CLI'
+
+- script: |
+    npm install --force
+    ng --version  # Verify Angular CLI version
+    ng build
+  displayName: 'Build Angular Application'
+- task: SonarCloudAnalyze@2
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
