@@ -27,4 +27,4 @@ steps:
     script: |
       trivy image --format table \
                     --output trivy-image-report.html \
-                    hadil0505/hadil0505/haki_app:haki_finalll 
+                    hadil0505/haki_app:haki_finalll 
