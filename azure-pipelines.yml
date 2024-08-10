@@ -22,7 +22,12 @@ steps:
       sudo apt-get install trivy
       trivy -v
       pwd
-
+- task: CmdLine@2
+  displayName: 'DOWNLOAD JUNIT TEMPLATE'
+  inputs:
+    script: |
+      mkdir -p .azuredevops
+      curl -o .azuredevops/junit.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/docs/junit.tpl
 - task: CmdLine@2
   displayName: 'RUN AQUASEC TRIVY SCAN'
   inputs:
