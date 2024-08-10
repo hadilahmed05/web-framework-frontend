@@ -32,6 +32,6 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Trivy Report'
   inputs:
-    targetPath: '$(Pipeline.Workspace)/trivy-image-report.html'
+    targetPath: '/home/hadil/Desktop/myagent/_work/1/s/trivy-image-report.html'
     artifactName: 'trivy-reports'
     publishLocation: 'pipeline'
