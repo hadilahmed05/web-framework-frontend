@@ -9,10 +9,24 @@ trigger:
 pool:
   name: Default
 steps:
-- task: dependency-check-build-task@6
+- task: CmdLine@2
+  displayName: 'Install KubeLinter'
   inputs:
-    projectName: 'hakiFrontend_pipeline'
-    scanPath: '.'
-    format: 'HTML'
-    uploadReports: true
+    script: |
+      curl -s https://api.github.com/repos/stackrox/kube-linter/releases/latest | grep "browser_download_url.*linux_amd64.tar.gz" | cut -d : -f 2,3 | tr -d \" | wget -qi -
+      tar -xzf kube-linter-*.tar.gz
+      sudo mv kube-linter /usr/local/bin/
+      kube-linter version
 
+- task: CmdLine@2
+  displayName: 'Run KubeLinter Scan'
+  inputs:
+    script: |
+      mkdir -p kubelinter-reports
+      kube-linter lint frontend_manifests --format sarif --output kubelinter-reports/kubelinter-results.sarif
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish KubeLinter Report'
+  inputs:
+    targetPath: 'kubelinter-reports'
+    artifactName: 'kubelinter-reports'
