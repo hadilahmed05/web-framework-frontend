@@ -24,35 +24,22 @@ steps:
       pwd
 
 - task: CmdLine@2
-  displayName: 'DOWNLOAD JUNIT TEMPLATE'
+  displayName: 'RUN AQUASEC TRIVY SCAN'
   inputs:
     script: |
-      mkdir -p .azuredevops
-      curl -o .azuredevops/junit.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/docs/junit.tpl
-
-- task: CmdLine@2
-  displayName: 'RUN AQUASEC TRIVY SCAN AND COPY TO ARTIFACTS STAGING DIRECTORY'
-  inputs:
-    script: |
-      trivy image --severity LOW,MEDIUM --format template --template "@.azuredevops/junit.tpl" -o junit-report-low-med.xml hadil0505/haki_app:haki_finalll
+      trivy image --severity LOW,MEDIUM --format template --template "@.azuredevops/junit.tpl" -o junit-report-low-med.xml hadil0505/haki_app:haki_finalll        
       trivy image --severity HIGH,CRITICAL --format template --template "@.azuredevops/junit.tpl" -o junit-report-high-crit.xml hadil0505/haki_app:haki_finalll
 
-- task: PublishTestResults@2
-  displayName: 'Publish Low and Medium Vulnerabilities'
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Low and Medium Vulnerabilities Report'
   inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/junit-report-low-med.xml'
-    mergeTestResults: true
-    failTaskOnFailedTests: false
-    testRunTitle: 'Trivy - Low and Medium Vulnerabilities'
-  condition: 'always()'
+    targetPath: '$(Pipeline.Workspace)'
+    artifactName: 'trivy-reports'
+    publishLocation: 'pipeline'
 
-- task: PublishTestResults@2
-  displayName: 'Publish High and Critical Vulnerabilities'
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish High and Critical Vulnerabilities Report'
   inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/junit-report-high-crit.xml'
-    mergeTestResults: true
-    failTaskOnFailedTests: true
-    testRunTitle: 'Trivy - High and Critical Vulnerabilities'
-  condition: 'always()'
+    targetPath: '$(Pipeline.Workspace)'
+    artifactName: 'trivy-reports'
+    publishLocation: 'pipeline'
