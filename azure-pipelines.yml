@@ -12,7 +12,7 @@ pool:
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '3.x'
+    versionSpec: '3.10.12'
     addToPath: true
 
 - task: CmdLine@2
@@ -30,7 +30,7 @@ steps:
   inputs:
     script: |
       ./ZAP_2_11_1/zap.sh -daemon -host 127.0.0.1 -port 8080 -config api.disablekey=true
-      zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' http://yourappurl.com
+      zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' http://172.213.180.82/
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish OWASP ZAP Report'
