@@ -18,7 +18,7 @@ jobs:
     displayName: 'Install Arachni'
 
   - script: |
-      /usr/local/arachni/bin/arachni http://172.213.180.82/ --output-only-stdout --report-save-path=report.afr
+      /usr/local/arachni/bin/arachni http://172.213.180.82/ --report-save-path=report.afr
     displayName: 'Run Arachni Scan'
 
   - script: |
