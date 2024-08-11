@@ -10,26 +10,12 @@ pool:
   name: Default
 
 steps:
-- task: CmdLine@2
-  displayName: 'Install KubeLinter'
-  inputs:
-    script: |
-      sudo apt-get update
-      sudo apt-get install -y curl tar
-      curl -L -o kube-linter-linux.tar.gz https://github.com/stackrox/kube-linter/releases/download/v0.6.8/kube-linter-linux.tar.gz
-      tar -xzf kube-linter-linux.tar.gz
-      sudo mv kube-linter /usr/local/bin/kube-linter
-      rm kube-linter-linux.tar.gz
-
-- task: CmdLine@2
-  displayName: 'Run KubeLinter Scan'
-  inputs:
-    script: |
-      mkdir -p kubelinter-reports
-      kube-linter lint ./frontend_manifests > kubelinter-reports/kubelinter-results.txt || true
-
+- script: |
+    docker pull owasp/zap2docker-stable
+    docker run -u root -v $(System.DefaultWorkingDirectory):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://172.213.180.82 -r zap_report.html
+  displayName: 'Run OWASP ZAP Baseline Scan'
 - task: PublishPipelineArtifact@1
-  displayName: 'Publish KubeLinter Report'
   inputs:
-    targetPath: 'kubelinter-reports'
-    artifactName: 'kubelinter-reports'
+    targetPath: '$(System.DefaultWorkingDirectory)/zap_report.html'
+    artifactName: 'DAST-Reports'
+    publishLocation: 'pipeline'
