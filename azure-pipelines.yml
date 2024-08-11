@@ -6,63 +6,18 @@
 trigger:
 - main
 
+
+jobs:
+- job: BuildAndScan
 pool:
   name: Default
+  steps:
+  - script: |
+      wget https://github.com/arachni/arachni/releases/download/v1.5.0/arachni-1.5.0-0.3.11-20191203-linux-x86_64.tar.gz
+      tar -xzf arachni-1.5.0-0.3.11-20191203-linux-x86_64.tar.gz
+      sudo mv arachni-1.5.0-0.3.11 /usr/local/arachni
+    displayName: 'Install Arachni'
 
-steps:
-- script: |
-    # Install default Java Runtime Environment (if not already installed)
-    sudo apt-get update
-    sudo apt-get install -y default-jre
-
-    # Install specific Java version (Java 17 in this case)
-    sudo apt-get install -y openjdk-17-jre
-
-    # Verify the installation
-    java -version
-  displayName: 'Install Java'
-
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.10.12'
-  displayName: 'Setup Python'
-
-- script: |
-    # Download OWASP ZAP version 2.15.0
-    wget https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2_15_0_unix.sh
-
-    # Give execute permission to the downloaded script
-    chmod +x ZAP_2_15_0_unix.sh
-
-    # Run the installer as root
-    sudo ./ZAP_2_15_0_unix.sh -q
-
-    # Verify the installation
-    zap_dir=$(find / -type d -name "OWASP ZAP" 2>/dev/null | head -n 1)
-    if [ -d "$zap_dir" ]; then
-      echo "OWASP ZAP installed in $zap_dir"
-      echo "Starting OWASP ZAP..."
-      nohup "$zap_dir/zap.sh" -daemon -port 8080 &
-      sleep 30
-    else
-      echo "OWASP ZAP installation directory not found."
-      exit 1
-    fi
-  displayName: 'Install and Start OWASP ZAP'
-
-- script: |
-    # Run a scan (change URL to your target)
-    curl -X POST "http://localhost:8080/JSON/ascan/action/scan/?url=http://172.213.180.82/&recurse=true"
-
-    # Wait for the scan to complete (adjust if necessary)
-    sleep 120
-
-    # Generate the report (optional)
-    curl -X GET "http://localhost:8080/OTHER/core/other/htmlreport/?formattype=html" -o zap_report.html
-  displayName: 'Run OWASP ZAP Scan'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: 'zap_report.html'
-    artifactName: 'OWASP_ZAP_Report'
-  displayName: 'Publish OWASP ZAP Report'
+  - script: |
+      /usr/local/arachni/bin/arachni http://172.213.180.82/ --output-only-stdout --report-save-path=report.afr
+    displayName: 'Run Arachni Scan'
