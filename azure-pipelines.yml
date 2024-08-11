@@ -21,3 +21,9 @@ pool:
   - script: |
       /usr/local/arachni/bin/arachni http://172.213.180.82/ --output-only-stdout --report-save-path=report.afr
     displayName: 'Run Arachni Scan'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: 'report.afr'
+      artifact: 'arachni-report'
+      publishLocation: 'pipeline'
+    displayName: 'Publish Arachni Report'
