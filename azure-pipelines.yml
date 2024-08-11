@@ -27,7 +27,7 @@ jobs:
 
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: '$(Pipeline.Workspace)/report.afr'
+      targetPath: '/home/hadil/Desktop/myagent/_work/1/s/report.afr'
       artifact: 'arachni-report'
       publishLocation: 'pipeline'
     displayName: 'Publish Arachni Report'
