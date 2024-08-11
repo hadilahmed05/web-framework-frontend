@@ -11,8 +11,8 @@ pool:
 
 steps:
 - script: |
-    docker pull owasp/zap2docker-stable
-    docker run -u root -v $(System.DefaultWorkingDirectory):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://172.213.180.82 -r zap_report.html
+    docker pull owasp/zap2docker-weekly
+    docker run -u root -v $(System.DefaultWorkingDirectory):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-baseline.py -t <URL_TO_SCAN> -r zap_report.html
   displayName: 'Run OWASP ZAP Baseline Scan'
 - task: PublishPipelineArtifact@1
   inputs:
