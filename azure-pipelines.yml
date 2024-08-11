@@ -6,11 +6,10 @@
 trigger:
 - main
 
-
 jobs:
 - job: BuildAndScan
-pool:
-  name: Default
+  pool:
+    name: Default
   steps:
   - script: |
       wget https://github.com/arachni/arachni/releases/download/v1.5.0/arachni-1.5.0-0.3.11-20191203-linux-x86_64.tar.gz
@@ -21,9 +20,14 @@ pool:
   - script: |
       /usr/local/arachni/bin/arachni http://172.213.180.82/ --output-only-stdout --report-save-path=report.afr
     displayName: 'Run Arachni Scan'
+
+  - script: |
+      ls -la
+    displayName: 'List files in working directory'
+
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: 'report.afr'
+      targetPath: '$(Pipeline.Workspace)/report.afr'
       artifact: 'arachni-report'
       publishLocation: 'pipeline'
     displayName: 'Publish Arachni Report'
