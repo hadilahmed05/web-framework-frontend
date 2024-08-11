@@ -34,20 +34,23 @@ steps:
     # Give execute permission to the downloaded script
     chmod +x ZAP_2_15_0_unix.sh
 
-    # Run the installer
-    ./ZAP_2_15_0_unix.sh -q
+    # Run the installer as root
+    sudo ./ZAP_2_15_0_unix.sh -q
 
     # Verify the installation
-    ./zap.sh -version
-  displayName: 'Install OWASP ZAP'
+    zap_dir=$(find / -type d -name "OWASP ZAP" 2>/dev/null | head -n 1)
+    if [ -d "$zap_dir" ]; then
+      echo "OWASP ZAP installed in $zap_dir"
+      echo "Starting OWASP ZAP..."
+      nohup "$zap_dir/zap.sh" -daemon -port 8080 &
+      sleep 30
+    else
+      echo "OWASP ZAP installation directory not found."
+      exit 1
+    fi
+  displayName: 'Install and Start OWASP ZAP'
 
 - script: |
-    # Start OWASP ZAP in daemon mode
-    nohup ./zap.sh -daemon -port 8080 &
-
-    # Wait for OWASP ZAP to start up (adjust if necessary)
-    sleep 30
-
     # Run a scan (change URL to your target)
     curl -X POST "http://localhost:8080/JSON/ascan/action/scan/?url=http://172.213.180.82/&recurse=true"
 
